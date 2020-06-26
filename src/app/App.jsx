@@ -1,8 +1,8 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import GameboardPage from './pages/GameboardPage';
+import ModalMessage from './components/ModalMessage';
 
-const App = () => <GameboardPage />;
+const App = () => <ModalMessage />;
 
 export default App;
