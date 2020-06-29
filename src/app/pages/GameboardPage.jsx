@@ -1,35 +1,18 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Container, Col, Row, CardDeck} from 'react-bootstrap';
 import Status from '../components/Status';
 import PlayerCard from '../components/PlayerCard';
 import TurnsInfo from '../components/TurnsInfo';
 import monster from '../../shared/images/monster.png';
 import player from '../../shared/images/player.png';
-import {useSelector, useDispatch} from 'react-redux';
-import {cardActions} from '../../model/actions';
-import axios from 'axios';
+import {useSelector} from 'react-redux';
 
 const GameboardPage = () => {
-  const dispatch = useDispatch();
-
   // player data
   const playerStatus = useSelector(state => state.getPlayerData.playerData);
 
   // monster data
   const monsterStatus = useSelector(state => state.getMonsterData.monsterData);
-
-  // get data from API
-  useEffect(() => {
-    async function fetchData() {
-      const res = await axios(`http://game.bons.me/api/players/${playerStatus.id}/cards`);
-      const data = await res.data;
-      dispatch(cardActions.setCardData(data));
-    }
-    fetchData();
-  }, [dispatch, playerStatus.id]);
-
-  // card data
-  const cardStatus = useSelector(state => state.getCardData.cardData);
 
   // get data for new game
   const newGame = useSelector(state => state.getGameData.gameData);
@@ -43,17 +26,13 @@ const GameboardPage = () => {
           <Row>
             <Col>
               <CardDeck>
-                {cardStatus &&
-                  cardStatus.map(card => {
-                    const {effect, value, id} = card;
-                    return <PlayerCard key={id} cardName={effect} value={value} />;
-                  })}
+                <PlayerCard />
               </CardDeck>
             </Col>
           </Row>
         </Col>
         <Col xs={3} className='bg-dark text-white p-0 m-auto'>
-          <TurnsInfo currentTurn={newGame.currentTurn} pastTurn={newGame.currentTurn} leftTurn={newGame.turnsLeft} />
+          <TurnsInfo currentTurn={newGame.currentTurn + 1} pastTurn={newGame.currentTurn} leftTurn={newGame.turnsLeft - 1} />
         </Col>
       </Row>
     </Container>
