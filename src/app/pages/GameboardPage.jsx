@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import axios from 'axios';
 import {Container, Col, Row, CardDeck} from 'react-bootstrap';
 import Status from '../components/Status';
 import PlayerCard from '../components/PlayerCard';
@@ -7,42 +6,54 @@ import TurnsInfo from '../components/TurnsInfo';
 import monster from '../../shared/images/monster.png';
 import player from '../../shared/images/player.png';
 import {useSelector, useDispatch} from 'react-redux';
-import {playerActions} from '../../model/actions';
+import {cardActions} from '../../model/actions';
+import axios from 'axios';
 
 const GameboardPage = () => {
   const dispatch = useDispatch();
 
+  // player data
+  const playerStatus = useSelector(state => state.getPlayerData.playerData);
+
+  // monster data
+  const monsterStatus = useSelector(state => state.getMonsterData.monsterData);
+
+  // get data from API
+  useEffect(() => {
+    async function fetchData() {
+      const res = await axios(`http://game.bons.me/api/players/${playerStatus.id}/cards`);
+      const data = await res.data;
+      dispatch(cardActions.setCardData(data));
+    }
+    fetchData();
+  }, [dispatch, playerStatus.id]);
+
+  // card data
+  const cardStatus = useSelector(state => state.getCardData.cardData);
+
   // get data for new game
   const newGame = useSelector(state => state.getGameData.gameData);
 
-  // get data for player
-  useEffect(() => {
-    axios.get(`http://game.bons.me/api/games/${newGame.id}/player`).then(res => {
-      const data = res.data;
-      dispatch(playerActions.setPlayerData(data));
-    });
-  }, [dispatch, newGame.id]);
-
-  const playerStatus = useSelector(state => state.getPlayerData.playerData);
-
   return (
     <Container>
-      <Row className='justify-content-md-center align-items-center vh-100'>
-        <Col xs={9}>
-          <Status avatar={monster} pj='Enemy' hp='HP: 32/40' shield='Shield: 0' />
-          <Status avatar={player} pj={playerStatus.name} hp='HP: 16/48' shield='Shield: 45' />
+      <Row className='align-items-center vh-100'>
+        <Col xs={8}>
+          <Status avatar={monster} pj={monsterStatus.name} hp={`HP: ${monsterStatus.hp}/${monsterStatus.maxHp}`} shield={`Shield: ${monsterStatus.shield}`} />
+          <Status avatar={player} pj={playerStatus.name} hp={`HP: ${playerStatus.hp}/${playerStatus.maxHp}`} shield={`Shield: ${playerStatus.shield}`} />
           <Row>
             <Col>
               <CardDeck>
-                <PlayerCard />
-                <PlayerCard />
-                <PlayerCard />
+                {cardStatus &&
+                  cardStatus.map(card => {
+                    const {effect, value, id} = card;
+                    return <PlayerCard key={id} cardName={effect} value={value} />;
+                  })}
               </CardDeck>
             </Col>
           </Row>
         </Col>
-        <Col xs={3} className='bg-dark text-white p-0'>
-          <TurnsInfo />
+        <Col xs={3} className='bg-dark text-white p-0 m-auto'>
+          <TurnsInfo currentTurn={newGame.currentTurn} pastTurn={newGame.currentTurn} leftTurn={newGame.turnsLeft} />
         </Col>
       </Row>
     </Container>
