@@ -3,6 +3,7 @@ import {Container, Col, Row, CardColumns} from 'react-bootstrap';
 import Status from './Status';
 import PlayerCard from './Card';
 import TurnsInfo from './Sidebar';
+import Alert from './Alert';
 import player from '../../shared/images/player.png';
 import {useSelector} from 'react-redux';
 import ModalMessage from './Modal';
@@ -28,6 +29,7 @@ const GameboardPage = () => {
       ) : (
         <Container>
           <Row className='vh-100 mt-2'>
+            <Alert />
             <Col xs={8}>
               <Status avatar={monsterStatus.image} pj={monsterStatus.name} hp={`HP: ${monsterStatus.hp}/${monsterStatus.maxHp}`} shield={`Shield: ${monsterStatus.shield}`} life={lifeMonster} />
               <Status avatar={player} pj={playerStatus.name} hp={`HP: ${playerStatus.hp}/${playerStatus.maxHp}`} shield={`Shield: ${playerStatus.shield}`} life={lifePlayer} />
@@ -39,7 +41,7 @@ const GameboardPage = () => {
                 </Col>
               </Row>
             </Col>
-            <Col xs={3} className='bg-dark text-white p-0 mt-2 mb-4 h-100'>
+            <Col xs={3} className='bg-dark text-white p-0 mt-2 mb-4 h-100 mx-auto'>
               <TurnsInfo currentTurn={newGame.currentTurn + 1} pastTurn={newGame.currentTurn} leftTurn={newGame.turnsLeft - 1} />
             </Col>
           </Row>

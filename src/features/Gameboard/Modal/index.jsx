@@ -6,7 +6,7 @@ import {useSelector} from 'react-redux';
 import {useHistory} from 'react-router-dom';
 
 const ModalMessage = () => {
-  const playerStatus = useSelector(state => state.getPlayerData.playerData.hp);
+  const playerStatus = useSelector(state => state.getPlayerData.playerData);
 
   const newGame = useSelector(state => state.getGameData.gameData);
 

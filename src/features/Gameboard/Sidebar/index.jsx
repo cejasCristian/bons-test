@@ -1,18 +1,21 @@
 import React from 'react';
 import {Card, Button} from 'react-bootstrap';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import * as fetch from '../../../app/helpers/fetch';
+import {alertAction} from '../../../model/actions';
 
 const TurnsInfo = ({currentTurn, pastTurn, leftTurn}) => {
   const cardID = useSelector(state => state.selectedCardData.cardData);
   const gameID = useSelector(state => state.getGameData.gameData.id);
   const playerID = useSelector(state => state.getPlayerData.playerData.id);
+  const dispatch = useDispatch();
 
   const nextTurn = async () => {
     await fetch.getNextTurn(gameID, cardID);
     await fetch.getPlayer(gameID);
     await fetch.getMonster(gameID);
     await fetch.getCards(playerID);
+    dispatch(alertAction.alert(true));
   };
 
   return (
