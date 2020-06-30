@@ -12,6 +12,11 @@ const ModalMessage = () => {
 
   const history = useHistory();
 
+  const handleClick = () => {
+    history.push('/');
+    // eslint-disable-next-line no-undef
+    window.location.reload();
+  };
   return (
     <>
       {playerStatus.hp === 0 || newGame.currentTurn === 20 ? (
@@ -23,7 +28,7 @@ const ModalMessage = () => {
             <img src={loser} alt='loser' className='img-fluid p-0' />
           </Modal.Body>
           <Modal.Footer className='bg-dark border-dark'>
-            <Button variant='primary' onClick={() => history.push('/')}>
+            <Button variant='primary' onClick={handleClick}>
               Try Again!
             </Button>
           </Modal.Footer>
@@ -37,7 +42,7 @@ const ModalMessage = () => {
             <img src={medal} alt='medal' className='img-fluid p-0' />
           </Modal.Body>
           <Modal.Footer className='bg-dark border-dark'>
-            <Button variant='primary' onClick={() => history.push('/')}>
+            <Button variant='primary' onClick={handleClick}>
               Try Again!
             </Button>
           </Modal.Footer>
