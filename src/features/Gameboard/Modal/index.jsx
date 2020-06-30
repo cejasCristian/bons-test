@@ -17,6 +17,7 @@ const ModalMessage = () => {
     // eslint-disable-next-line no-undef
     window.location.reload();
   };
+
   return (
     <>
       {playerStatus.hp === 0 || newGame.currentTurn === 20 ? (
