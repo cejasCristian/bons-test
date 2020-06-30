@@ -1,0 +1,7 @@
+.heading {
+  font-size: 2rem;
+}
+
+.form-control::-webkit-input-placeholder {
+  color: #ffffff;
+}

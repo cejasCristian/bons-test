@@ -1,25 +1,18 @@
 import React from 'react';
-import {useDispatch} from 'react-redux';
 import {Card, Button} from 'react-bootstrap';
 import {useSelector} from 'react-redux';
-import axios from 'axios';
-import {gameActions} from '../../model/actions';
+import * as fetch from '../../../app/helpers/fetch';
 
 const TurnsInfo = ({currentTurn, pastTurn, leftTurn}) => {
   const cardID = useSelector(state => state.selectedCardData.cardData);
-  const game = useSelector(state => state.getGameData.gameData);
-  const dispatch = useDispatch();
+  const gameID = useSelector(state => state.getGameData.gameData.id);
+  const playerID = useSelector(state => state.getPlayerData.playerData.id);
 
-  const fetch = async () => {
-    const res = await axios.post(`http://game.bons.me/api/games/${game.id}/next-turn`, {card: cardID});
-    const data = await res.data;
-    dispatch(gameActions.setGameData(data.game));
-
-    // eslint-disable-next-line no-shadow
-    axios.post(`http://game.bons.me/api/${game.id}`).then(res => {
-      const data2 = res.data;
-      dispatch(gameActions.setGameData(data2));
-    });
+  const nextTurn = async () => {
+    await fetch.getNextTurn(gameID, cardID);
+    await fetch.getPlayer(gameID);
+    await fetch.getMonster(gameID);
+    await fetch.getCards(playerID);
   };
 
   return (
@@ -35,7 +28,7 @@ const TurnsInfo = ({currentTurn, pastTurn, leftTurn}) => {
           <Card.Title className='text-center font-weight-bold display-4'>{leftTurn}</Card.Title>
         </Card.Body>
       </Card>
-      <Button variant='info' type='submit' size='xs' className='mt-5 mb-5 mx-5' onClick={() => fetch()}>
+      <Button variant='info' type='submit' size='xs' className='mt-5 mb-5 mx-5' onClick={() => nextTurn()}>
         END TURN
       </Button>
     </Card>

@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {Card} from 'react-bootstrap';
-import heal from '../../shared/images/heal.png';
-import attack from '../../shared/images/attack.png';
-import shield from '../../shared/images/shield.png';
-import defaultCard from '../../shared/images/defaultCard.png';
-import '../styles/playerCard.css';
-import {cardActions, selectedCardAction} from '../../model/actions';
+import heal from '../../../shared/images/heal.png';
+import attack from '../../../shared/images/attack.png';
+import shield from '../../../shared/images/shield.png';
+import defaultCard from '../../../shared/images/defaultCard.png';
+import {selectedCardAction} from '../../../model/actions';
 import {useSelector, useDispatch} from 'react-redux';
-import axios from 'axios';
+import {getCards} from '../../../app/helpers/fetch';
+import './playerCard.css';
 
 const PlayerCard = () => {
   const [cardID, setCardID] = useState();
@@ -17,21 +17,19 @@ const PlayerCard = () => {
 
   // get cards from API
   useEffect(() => {
-    async function fetchData() {
-      const res = await axios(`http://game.bons.me/api/players/${playerStatus.id}/cards`);
-      const data = await res.data;
-      dispatch(cardActions.setCardData(data));
-    }
-    fetchData();
+    getCards(playerStatus.id);
   }, [dispatch, playerStatus.id]);
 
   const handleCardSelected = card => {
     setCardID(card);
-    dispatch(selectedCardAction.setSelectedCard(cardID));
+    dispatch(selectedCardAction.setSelectedCard(card));
   };
 
   // card data
   const cardStatus = useSelector(state => state.getCardData.cardData);
+
+  // monster effect
+  const monsterEffect = useSelector(state => state.getGameData.monsterEffect.effect);
 
   const currentImg = card => {
     let image;
@@ -52,15 +50,17 @@ const PlayerCard = () => {
     return image;
   };
 
+  const horror = 'HORROR';
+
   return (
     cardStatus &&
     cardStatus.map(card => {
       const {effect, value, id} = card;
 
       return (
-        <Card key={id} className={`border-dark card-hover ${id === cardID ? 'active' : ''}`} id={id} onClick={() => handleCardSelected(id)}>
+        <Card key={id} className={`border-dark card-hover ${monsterEffect === horror && 'disabled'} ${id === cardID && 'active'}`} id={id} onClick={() => handleCardSelected(id)}>
           <Card.Img variant='top' className='p-4 bg-light' src={currentImg(effect)} />
-          <Card.Body className='bg-secondary'>
+          <Card.Body className={`${id === cardID ? 'bg-info' : 'bg-secondary'}`}>
             <Card.Title className='text-center font-weight-bold text-white'>{effect}</Card.Title>
             <Card.Title className='text-center font-weight-bold text-white'>Value: {value}</Card.Title>
           </Card.Body>

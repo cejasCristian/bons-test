@@ -1,34 +1,30 @@
 import React, {useEffect} from 'react';
 import {Col, Row, Card, ProgressBar} from 'react-bootstrap';
 import {useSelector, useDispatch} from 'react-redux';
-import {playerActions, monsterActions} from '../../model/actions';
-import axios from 'axios';
+import {getPlayer, getMonster} from '../../../app/helpers/fetch';
+import './status.css';
 
 const Status = ({avatar, pj, hp, shield, life}) => {
   const dispatch = useDispatch();
 
   // get data for new game
-  const newGame = useSelector(state => state.getGameData.gameData);
+  const newGameID = useSelector(state => state.getGameData.gameData.id);
 
-  // get data for player
+  // get data for player and monster
   useEffect(() => {
-    async function fetchData() {
-      const res = await axios(`http://game.bons.me/api/games/${newGame.id}/player`);
-      const data = await res.data;
-      dispatch(playerActions.setPlayerData(data));
-    }
-    fetchData();
-  }, [dispatch, newGame.id]);
+    getPlayer(newGameID);
+    getMonster(newGameID);
+  }, [dispatch, newGameID]);
 
-  // get data for monster
-  useEffect(() => {
-    async function fetchData() {
-      const res = await axios(`http://game.bons.me/api/games/${newGame.id}/monster`);
-      const data = await res.data;
-      dispatch(monsterActions.setMonsterData(data));
+  // life bar color
+  const lifeStatus = () => {
+    if (life > 60) {
+      return 'success';
+    } else if (life > 30 && life <= 60) {
+      return 'warning';
     }
-    fetchData();
-  }, [dispatch, newGame.id]);
+    return 'danger';
+  };
 
   return (
     <Row className='mb-4'>
@@ -36,13 +32,13 @@ const Status = ({avatar, pj, hp, shield, life}) => {
         <Card className='bg-dark'>
           <Row className='justify-content-md-center align-items-center'>
             <Col xs={5} className='justify-content-md-center align-items-center'>
-              <Card.Img src={avatar} alt='avatarImg' className='img-fluid p-2 bg-secondary' />
+              <Card.Img src={avatar} alt='avatarImg' className='img-fluid p-2 bg-secondary monsterImg' />
             </Col>
             <Card.Body>
-              <Col xs={7} className='justify-content-md-center align-items-center'>
+              <Col xs={7} className='justify-content-md-center align-items-center m-auto'>
                 <p className='text-white text-center font-weight-bold m-0'>{pj}</p>
                 <p className='text-white text-center m-0'>{hp}</p>
-                <ProgressBar animated variant='success' now={life} />
+                <ProgressBar animated variant={lifeStatus()} now={life} />
               </Col>
             </Card.Body>
           </Row>
