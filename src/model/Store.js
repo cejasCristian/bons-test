@@ -1,10 +1,11 @@
-import {createStore, compose} from 'redux';
+import {createStore, applyMiddleware, compose} from 'redux';
 import rootReducer from './reducers';
+import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
+import thunkMiddleware from 'redux-thunk';
 
-export default function configureStore(initialState) {
-  const composeEnhancers =
-    // eslint-disable-next-line no-undef
-    (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
+// eslint-disable-next-line no-undef
+const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 
-  return createStore(rootReducer, initialState, composeEnhancers());
-}
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunkMiddleware, reduxImmutableStateInvariant())));
+
+export default store;

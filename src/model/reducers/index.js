@@ -3,14 +3,14 @@ import getGameData from './game.reducer';
 import getPlayerData from './player.reducer';
 import getMonsterData from './monster.reducer';
 import getCardData from './card.reducer';
-import getSelectedCardData from './selectedCard.reducer';
+import selectedCardData from './selectedCard.reducer';
 
 const rootReducer = combineReducers({
   getGameData,
   getPlayerData,
   getMonsterData,
   getCardData,
-  getSelectedCardData
+  selectedCardData
 });
 
 export default rootReducer;

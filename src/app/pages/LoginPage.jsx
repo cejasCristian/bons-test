@@ -1,13 +1,9 @@
 import React, {useState} from 'react';
 import {useHistory} from 'react-router-dom';
-import axios from 'axios';
 import {Container, Row, Col, Form, Button} from 'react-bootstrap';
-import {useDispatch} from 'react-redux';
-import {gameActions} from '../../model/actions';
+import {getGame} from '../helpers/fetch';
 
 const LoginPage = () => {
-  const dispatch = useDispatch();
-
   const history = useHistory();
 
   const [name, setName] = useState({
@@ -21,10 +17,7 @@ const LoginPage = () => {
   // get a new game
   const handleSubmit = e => {
     e.preventDefault();
-
-    axios.post(`http://game.bons.me/api/games?name`, {name}).then(res => {
-      const data = res.data;
-      dispatch(gameActions.setGameData(data));
+    getGame(`http://game.bons.me/api/games?name`, name).then(() => {
       history.push('/gameboard');
     });
   };

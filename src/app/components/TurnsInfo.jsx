@@ -1,18 +1,25 @@
 import React from 'react';
+import {useDispatch} from 'react-redux';
 import {Card, Button} from 'react-bootstrap';
-import {useSelector, useDispatch} from 'react-redux';
-import {gameActions} from '../../model/actions';
+import {useSelector} from 'react-redux';
 import axios from 'axios';
+import {gameActions} from '../../model/actions';
 
 const TurnsInfo = ({currentTurn, pastTurn, leftTurn}) => {
-  const dispatch = useDispatch();
-  const cardId = useSelector(state => state.getSelectedCardData.selectedCardData);
+  const cardID = useSelector(state => state.selectedCardData.cardData);
   const game = useSelector(state => state.getGameData.gameData);
+  const dispatch = useDispatch();
 
   const fetch = async () => {
-    const res = await axios.post(`http://game.bons.me/api/games/${game.id}/next-turn?card`, {cardId});
+    const res = await axios.post(`http://game.bons.me/api/games/${game.id}/next-turn`, {card: cardID});
     const data = await res.data;
     dispatch(gameActions.setGameData(data.game));
+
+    // eslint-disable-next-line no-shadow
+    axios.post(`http://game.bons.me/api/${game.id}`).then(res => {
+      const data2 = res.data;
+      dispatch(gameActions.setGameData(data2));
+    });
   };
 
   return (

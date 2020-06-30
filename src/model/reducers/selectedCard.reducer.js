@@ -1,16 +1,16 @@
 import {selectedCard} from '../constants';
 
 const initialState = {
-  selectedCardData: ''
+  cardData: ''
 };
 
-export const getSelectedCardData = (state = initialState, action) => {
+export const selectedCardData = (state = initialState, action) => {
   switch (action.type) {
     case selectedCard.SET_SELECTEDCARD:
-      return {...state, selectedCardData: action.data};
+      return {...state, cardData: action.data};
     default:
       return {...state};
   }
 };
 
-export default getSelectedCardData;
+export default selectedCardData;

@@ -4,13 +4,13 @@ import {useSelector, useDispatch} from 'react-redux';
 import {playerActions, monsterActions} from '../../model/actions';
 import axios from 'axios';
 
-const Status = ({avatar, pj, hp, shield}) => {
+const Status = ({avatar, pj, hp, shield, life}) => {
   const dispatch = useDispatch();
 
   // get data for new game
   const newGame = useSelector(state => state.getGameData.gameData);
 
-  // get data from API (player)
+  // get data for player
   useEffect(() => {
     async function fetchData() {
       const res = await axios(`http://game.bons.me/api/games/${newGame.id}/player`);
@@ -20,7 +20,7 @@ const Status = ({avatar, pj, hp, shield}) => {
     fetchData();
   }, [dispatch, newGame.id]);
 
-  // get data from API (monster)
+  // get data for monster
   useEffect(() => {
     async function fetchData() {
       const res = await axios(`http://game.bons.me/api/games/${newGame.id}/monster`);
@@ -39,10 +39,10 @@ const Status = ({avatar, pj, hp, shield}) => {
               <Card.Img src={avatar} alt='avatarImg' className='img-fluid p-2 bg-secondary' />
             </Col>
             <Card.Body>
-              <Col xs={7} className='p-0 m-auto'>
+              <Col xs={7} className='justify-content-md-center align-items-center'>
                 <p className='text-white text-center font-weight-bold m-0'>{pj}</p>
                 <p className='text-white text-center m-0'>{hp}</p>
-                <ProgressBar animated variant='success' now={100} />
+                <ProgressBar animated variant='success' now={life} />
               </Col>
             </Card.Body>
           </Row>

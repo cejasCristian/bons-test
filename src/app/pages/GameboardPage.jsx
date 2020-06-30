@@ -17,12 +17,15 @@ const GameboardPage = () => {
   // get data for new game
   const newGame = useSelector(state => state.getGameData.gameData);
 
+  const lifeMonster = (monsterStatus.hp / monsterStatus.maxHp) * 100;
+  const lifePlayer = (playerStatus.hp / playerStatus.maxHp) * 100;
+
   return (
     <Container>
       <Row className='align-items-center vh-100'>
         <Col xs={8}>
-          <Status avatar={monster} pj={monsterStatus.name} hp={`HP: ${monsterStatus.hp}/${monsterStatus.maxHp}`} shield={`Shield: ${monsterStatus.shield}`} />
-          <Status avatar={player} pj={playerStatus.name} hp={`HP: ${playerStatus.hp}/${playerStatus.maxHp}`} shield={`Shield: ${playerStatus.shield}`} />
+          <Status avatar={monster} pj={monsterStatus.name} hp={`HP: ${monsterStatus.hp}/${monsterStatus.maxHp}`} shield={`Shield: ${monsterStatus.shield}`} life={lifeMonster} />
+          <Status avatar={player} pj={playerStatus.name} hp={`HP: ${playerStatus.hp}/${playerStatus.maxHp}`} shield={`Shield: ${playerStatus.shield}`} life={lifePlayer} />
           <Row>
             <Col>
               <CardDeck>

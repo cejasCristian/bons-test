@@ -2,8 +2,8 @@ import {selectedCard} from '../constants';
 
 const setSelectedCard = (data = '') => ({type: selectedCard.SET_SELECTEDCARD, data});
 
-export const selectedCardActions = {
+export const selectedCardAction = {
   setSelectedCard
 };
 
-export default selectedCardActions;
+export default selectedCardAction;
